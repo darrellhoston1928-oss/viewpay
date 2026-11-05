@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: viewpay-platform
+    env: node
+    plan: free
+    buildCommand: pnpm install && cd backend && pnpm install && cd ../frontend && pnpm install && pnpm run build
+    startCommand: node backend/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: ENCRYPTION_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MEDIA_SECRET
+        generateValue: true

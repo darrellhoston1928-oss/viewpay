@@ -1,0 +1,22 @@
+{
+  "name": "viewpay",
+  "version": "1.0.0",
+  "description": "Viewpay - Premium Creator Monetization & E-Code Wallet Platform",
+  "scripts": {
+    "build": "cd frontend && pnpm run build",
+    "start": "node backend/server.js",
+    "dev:backend": "node --watch backend/server.js",
+    "dev:frontend": "cd frontend && pnpm run dev"
+  },
+  "keywords": [
+    "viewpay",
+    "creator-economy",
+    "e-code",
+    "razer-gold",
+    "apple-gift-card",
+    "wallet",
+    "paywall"
+  ],
+  "author": "Viewpay Team",
+  "license": "ISC"
+}

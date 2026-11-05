@@ -7,20 +7,9 @@ import {
 } from 'lucide-react';
 
 export function Navbar({ activePage, setActivePage }) {
-  const { user, walletBalance, unreadCount, pendingDepositsCount, logout, switchDemoAccount } = useAuth();
+  const { user, walletBalance, unreadCount, pendingDepositsCount, logout } = useAuth();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [demoDropdownOpen, setDemoDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleDemoSwitch = async (persona) => {
-    try {
-      await switchDemoAccount(persona);
-      setDemoDropdownOpen(false);
-      setMobileMenuOpen(false);
-    } catch (err) {
-      alert('Failed to switch demo account: ' + err.message);
-    }
-  };
 
   return (
     <nav className="sticky top-0 z-50 glass-nav border-b border-surface-border">
@@ -109,119 +98,9 @@ export function Navbar({ activePage, setActivePage }) {
             </div>
           </div>
 
-          {/* Right Section: Persona Switcher, Wallet, Notifications, Profile */}
+          {/* Right Section: Wallet, Notifications, Profile */}
           <div className="flex items-center space-x-3">
             
-            {/* Quick Demo Switcher Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setDemoDropdownOpen(!demoDropdownOpen)}
-                className="px-2.5 py-1.5 bg-surface-card hover:bg-surface-hover border border-surface-border rounded-lg text-xs font-semibold text-gray-300 flex items-center space-x-1.5 transition-all"
-                title="Switch demo persona to test different roles"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-primary-400 animate-spin-slow" />
-                <span className="hidden sm:inline">Demo Persona</span>
-                <ChevronDown className="w-3 h-3 text-gray-400" />
-              </button>
-
-              {demoDropdownOpen && (
-                <div 
-                  className="absolute right-0 mt-2 w-64 bg-surface-card border border-surface-border rounded-xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2"
-                  onMouseLeave={() => setDemoDropdownOpen(false)}
-                >
-                  <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-gray-400 border-b border-surface-border mb-1">
-                    Select Test Account
-                  </div>
-                  
-                  <div className="space-y-0.5">
-                    <button
-                      onClick={() => handleDemoSwitch('admin')}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-hover text-xs flex items-center justify-between text-amber-300"
-                    >
-                      <div>
-                        <div className="font-bold flex items-center">
-                          <Shield className="w-3 h-3 mr-1 text-amber-400" />
-                          Alexander Pierce (Owner Admin)
-                        </div>
-                        <div className="text-[10px] text-gray-400">admin@viewpay.com • Full Control</div>
-                      </div>
-                      {user?.email === 'admin@viewpay.com' && <CheckCircle className="w-3.5 h-3.5 text-primary-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleDemoSwitch('reviewer')}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-hover text-xs flex items-center justify-between text-yellow-300"
-                    >
-                      <div>
-                        <div className="font-bold flex items-center">
-                          <CreditCard className="w-3 h-3 mr-1 text-yellow-400" />
-                          Sarah Lin (Deposit Reviewer)
-                        </div>
-                        <div className="text-[10px] text-gray-400">reviewer@viewpay.com • Verifications</div>
-                      </div>
-                      {user?.email === 'reviewer@viewpay.com' && <CheckCircle className="w-3.5 h-3.5 text-primary-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleDemoSwitch('elena')}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-hover text-xs flex items-center justify-between text-pink-300"
-                    >
-                      <div>
-                        <div className="font-bold flex items-center">
-                          <User className="w-3 h-3 mr-1 text-pink-400" />
-                          Elena Thorne (Creator)
-                        </div>
-                        <div className="text-[10px] text-gray-400">elena@viewpay.com • Cosplay & Art ($14.99)</div>
-                      </div>
-                      {user?.email === 'elena@viewpay.com' && <CheckCircle className="w-3.5 h-3.5 text-pink-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleDemoSwitch('marcus')}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-hover text-xs flex items-center justify-between text-cyan-300"
-                    >
-                      <div>
-                        <div className="font-bold flex items-center">
-                          <User className="w-3 h-3 mr-1 text-cyan-400" />
-                          Marcus Vance (Creator)
-                        </div>
-                        <div className="text-[10px] text-gray-400">marcus@viewpay.com • Fitness ($19.99)</div>
-                      </div>
-                      {user?.email === 'marcus@viewpay.com' && <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleDemoSwitch('viewer')}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-hover text-xs flex items-center justify-between text-emerald-300"
-                    >
-                      <div>
-                        <div className="font-bold flex items-center">
-                          <Wallet className="w-3 h-3 mr-1 text-emerald-400" />
-                          John Davis (Viewer w/ Balance)
-                        </div>
-                        <div className="text-[10px] text-gray-400">viewer@viewpay.com • Balance: $85.00</div>
-                      </div>
-                      {user?.email === 'viewer@viewpay.com' && <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleDemoSwitch('newbie')}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-hover text-xs flex items-center justify-between text-gray-300"
-                    >
-                      <div>
-                        <div className="font-bold flex items-center">
-                          <User className="w-3 h-3 mr-1 text-gray-400" />
-                          Maya Sterling (New User)
-                        </div>
-                        <div className="text-[10px] text-gray-400">newbie@viewpay.com • $0 Balance (Test Deposit)</div>
-                      </div>
-                      {user?.email === 'newbie@viewpay.com' && <CheckCircle className="w-3.5 h-3.5 text-gray-400" />}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Wallet Balance Pill */}
             {user ? (
               <div className="flex items-center bg-surface-card border border-surface-border rounded-xl p-1 shadow-inner">

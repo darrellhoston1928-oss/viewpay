@@ -31,13 +31,11 @@ export function LandingPage({ setActivePage, onSelectCreator }) {
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] max-w-4xl mx-auto">
-            Monetize Premium Content with <span className="bg-gradient-to-r from-primary-400 via-amber-300 to-primary-500 bg-clip-text text-transparent">E-Code Wallet Security.</span>
+            Get Closer to Your Favorite <span className="bg-gradient-to-r from-primary-400 via-amber-300 to-primary-500 bg-clip-text text-transparent">Creator Idols.</span>
           </h1>
 
-          <p className="mt-6 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-normal leading-relaxed">
-            The next-generation content creator hub where fans unlock exclusive photos & videos using 
-            <strong className="text-white"> Razer Gold</strong> and <strong className="text-white">Apple Gift Card</strong> e-codes.
-            Verified by dedicated administrators with AES-256 encrypted vault storage.
+          <p className="mt-6 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto font-medium leading-relaxed">
+            "Start viewing exclusive photos, behind-the-scenes videos, and private moments from the creators you love."
           </p>
 
           {/* Action CTAs */}
@@ -46,7 +44,7 @@ export function LandingPage({ setActivePage, onSelectCreator }) {
               onClick={() => setActivePage('explore')}
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-primary-500 to-amber-500 hover:from-primary-400 hover:to-amber-400 text-black font-extrabold text-sm rounded-2xl shadow-glow-gold flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
             >
-              <span>Explore Top Creators</span>
+              <span>Start Viewing Idols</span>
               <ArrowRight className="w-4 h-4 ml-1" />
             </button>
 

@@ -527,7 +527,7 @@ router.post('/reports/:id/action', (req, res) => {
 
     if (action === 'hide_post') {
       db.prepare('UPDATE posts SET is_hidden = 1 WHERE id = ?').run(report.post_id);
-      db.prepare('UPDATE reports SET status = "actioned", reviewed_by_admin_id = ? WHERE id = ?').run(req.user.id, reportId);
+      db.prepare('UPDATE reports SET status = \'actioned\', reviewed_by_admin_id = ? WHERE id = ?').run(req.user.id, reportId);
       recordAuditLog({
         adminId: req.user.id,
         adminName: req.user.display_name,
@@ -538,7 +538,7 @@ router.post('/reports/:id/action', (req, res) => {
         req
       });
     } else {
-      db.prepare('UPDATE reports SET status = "dismissed", reviewed_by_admin_id = ? WHERE id = ?').run(req.user.id, reportId);
+      db.prepare('UPDATE reports SET status = \'dismissed\', reviewed_by_admin_id = ? WHERE id = ?').run(req.user.id, reportId);
     }
 
     res.json({ message: 'Moderation action applied.' });

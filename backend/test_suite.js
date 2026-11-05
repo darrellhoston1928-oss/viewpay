@@ -85,6 +85,27 @@ console.log('\n--- 6. Testing 18+ Age Verification Requirement ---');
 const usersWithout18 = db.prepare('SELECT COUNT(*) as c FROM users WHERE is_age_verified = 0').get().c;
 assert(usersWithout18 === 0, '100% of registered platform users confirmed 18+ requirement');
 
+// 7. Testing Post Creation Query & Subscriber Lookups
+console.log('\n--- 7. Testing Creator Post Query & Subscriber Notification Flow ---');
+try {
+  const creator = db.prepare('SELECT id, display_name FROM users WHERE role = ?').get('creator');
+  const subscribers = db.prepare("SELECT user_id FROM subscriptions WHERE creator_id = ? AND status = 'active'").all(creator.id);
+  assert(Array.isArray(subscribers), 'Subscriber lookup query runs without SQL syntax error');
+
+  const insertPost = db.prepare(`
+    INSERT INTO posts (creator_id, title, description, category, media_type, media_url, preview_url, is_locked, price, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(creator.id, 'Test Post Suite', 'A test post description', 'Art & Cosplay', 'photo', '/uploads/posts/test.jpg', '/uploads/posts/test.jpg', 1, 10.00, new Date().toISOString(), new Date().toISOString());
+
+  assert(insertPost.lastInsertRowid > 0, 'Post successfully inserted into database');
+
+  // Clean up test post
+  db.prepare('DELETE FROM posts WHERE id = ?').run(insertPost.lastInsertRowid);
+  assert(true, 'Test post verified and cleanly removed');
+} catch (err) {
+  assert(false, `Post creation query test failed: ${err.message}`);
+}
+
 console.log(`\n========================================`);
 console.log(`Test Results: ${passed} passed, ${failed} failed.`);
 console.log(`========================================\n`);

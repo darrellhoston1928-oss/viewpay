@@ -50,7 +50,7 @@ router.get('/', optionalAuth, (req, res) => {
     const enriched = creators.map(c => {
       let isSubscribed = false;
       if (currentUserId) {
-        const sub = db.prepare('SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = "active"').get(currentUserId, c.id);
+        const sub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = 'active'").get(currentUserId, c.id);
         isSubscribed = !!sub;
       }
       return { ...c, isSubscribed };
@@ -86,7 +86,7 @@ router.get('/:username', optionalAuth, (req, res) => {
     let isSubscribed = false;
 
     if (currentUserId) {
-      const activeSub = db.prepare('SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = "active"').get(currentUserId, creator.id);
+      const activeSub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = 'active'").get(currentUserId, creator.id);
       isSubscribed = !!activeSub;
     }
 
@@ -143,7 +143,7 @@ router.post('/:creatorId/subscribe', requireAuth, (req, res) => {
     }
 
     // Check if already actively subscribed
-    const existingSub = db.prepare('SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = "active"').get(userId, creatorId);
+    const existingSub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = 'active'").get(userId, creatorId);
     if (existingSub) {
       return res.status(400).json({ error: 'You are already actively subscribed to this creator.' });
     }
@@ -254,12 +254,12 @@ router.post('/:creatorId/unsubscribe', requireAuth, (req, res) => {
     const userId = req.user.id;
     const now = new Date().toISOString();
 
-    const sub = db.prepare('SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = "active"').get(userId, creatorId);
+    const sub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = 'active'").get(userId, creatorId);
     if (!sub) {
       return res.status(404).json({ error: 'No active subscription found.' });
     }
 
-    db.prepare('UPDATE subscriptions SET status = "cancelled", cancelled_at = ? WHERE id = ?').run(now, sub.id);
+    db.prepare("UPDATE subscriptions SET status = 'cancelled', cancelled_at = ? WHERE id = ?").run(now, sub.id);
 
     res.json({ message: 'Subscription cancelled. You will retain access until the end of the billing period.' });
   } catch (err) {

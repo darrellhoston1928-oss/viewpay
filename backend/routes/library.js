@@ -12,26 +12,27 @@ router.get('/unlocked', requireAuth, (req, res) => {
 
     // Posts unlocked via pay-per-post purchase OR creator's active subscription
     const posts = db.prepare(`
-      SELECT DISTINCT p.id, p.title, p.description, p.media_type, p.media_url, p.preview_url,
-                      p.price, p.category, p.views_count, p.likes_count, p.created_at,
-                      u.id as creator_id, u.display_name as creator_name, u.username as creator_username, u.avatar_url as creator_avatar,
-                      'purchased' as unlock_type
-      FROM purchases pur
-      JOIN posts p ON pur.post_id = p.id
-      JOIN users u ON p.creator_id = u.id
-      WHERE pur.user_id = ? AND p.is_hidden = 0
+      SELECT * FROM (
+        SELECT DISTINCT p.id, p.title, p.description, p.media_type, p.media_url, p.preview_url,
+                        p.price, p.category, p.views_count, p.likes_count, p.created_at,
+                        u.id as creator_id, u.display_name as creator_name, u.username as creator_username, u.avatar_url as creator_avatar,
+                        'purchased' as unlock_type
+        FROM purchases pur
+        JOIN posts p ON pur.post_id = p.id
+        JOIN users u ON p.creator_id = u.id
+        WHERE pur.user_id = ? AND p.is_hidden = 0
 
-      UNION
+        UNION
 
-      SELECT DISTINCT p.id, p.title, p.description, p.media_type, p.media_url, p.preview_url,
-                      p.price, p.category, p.views_count, p.likes_count, p.created_at,
-                      u.id as creator_id, u.display_name as creator_name, u.username as creator_username, u.avatar_url as creator_avatar,
-                      'subscription' as unlock_type
-      FROM subscriptions s
-      JOIN posts p ON s.creator_id = p.creator_id
-      JOIN users u ON p.creator_id = u.id
-      WHERE s.user_id = ? AND s.status = 'active' AND p.is_hidden = 0
-
+        SELECT DISTINCT p.id, p.title, p.description, p.media_type, p.media_url, p.preview_url,
+                        p.price, p.category, p.views_count, p.likes_count, p.created_at,
+                        u.id as creator_id, u.display_name as creator_name, u.username as creator_username, u.avatar_url as creator_avatar,
+                        'subscription' as unlock_type
+        FROM subscriptions s
+        JOIN posts p ON s.creator_id = p.creator_id
+        JOIN users u ON p.creator_id = u.id
+        WHERE s.user_id = ? AND s.status = 'active' AND p.is_hidden = 0
+      )
       ORDER BY id DESC
     `).all(userId, userId);
 

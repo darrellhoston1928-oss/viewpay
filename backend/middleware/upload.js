@@ -18,13 +18,16 @@ const POSTS_DIR = path.join(UPLOADS_DIR, 'posts');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    let dest = POSTS_DIR;
     if (file.fieldname === 'receipt') {
-      cb(null, RECEIPTS_DIR);
+      dest = RECEIPTS_DIR;
     } else if (file.fieldname === 'creator_id_doc') {
-      cb(null, CREATOR_DOCS_DIR);
-    } else {
-      cb(null, POSTS_DIR);
+      dest = CREATOR_DOCS_DIR;
     }
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+    cb(null, dest);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

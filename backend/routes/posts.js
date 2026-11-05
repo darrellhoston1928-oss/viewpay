@@ -37,7 +37,7 @@ router.get('/:id', optionalAuth, (req, res) => {
 
     if (currentUserId && !isUnlocked) {
       // Check active subscription to this creator
-      const sub = db.prepare('SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = "active"').get(currentUserId, post.creator_id);
+      const sub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = 'active'").get(currentUserId, post.creator_id);
       if (sub) {
         isUnlocked = true;
         isSubscribed = true;
@@ -146,7 +146,7 @@ router.post('/', requireAuth, upload.single('media'), (req, res) => {
     const postId = insertResult.lastInsertRowid;
 
     // Notify all active subscribers about the new post
-    const subscribers = db.prepare('SELECT user_id FROM subscriptions WHERE creator_id = ? AND status = "active"').all(user.id);
+    const subscribers = db.prepare("SELECT user_id FROM subscriptions WHERE creator_id = ? AND status = 'active'").all(user.id);
     subscribers.forEach(sub => {
       sendNotification({
         userId: sub.user_id,
@@ -163,7 +163,7 @@ router.post('/', requireAuth, upload.single('media'), (req, res) => {
     });
   } catch (err) {
     console.error('Post creation error:', err);
-    res.status(500).json({ error: 'Failed to create post.' });
+    res.status(500).json({ error: err.message || 'Failed to create post.' });
   }
 });
 
@@ -371,7 +371,7 @@ router.get('/:id/signed-url', requireAuth, (req, res) => {
 
     if (!allowed) {
       // Check subscription
-      const sub = db.prepare('SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = "active"').get(userId, post.creator_id);
+      const sub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND creator_id = ? AND status = 'active'").get(userId, post.creator_id);
       if (sub) allowed = true;
     }
 
